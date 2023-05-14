@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import "./SpinKit.css";
 import "bootstrap/dist/css/bootstrap.css";
@@ -9,38 +8,24 @@ import { memo, useCallback, useState, useEffect } from "react";
 import { Box } from "./Box";
 import { ItemTypes } from "./ItemTypes.js";
 import { Dustbin } from "./Dustbin.js";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import king from "./images/king.png";
 import society from "./images/Society.png";
-import ra from "./images/ra.png";
-import mo from "./images/mo.png";
-import craftsman from "./images/craftsman.png";
-import merchants from "./images/merchants.png";
-import ape_green from "./images/green.jpeg";
-import nyle from "./images/nyle.jpeg";
-import maddo from "./images/maddo.jpeg";
+import armoury_banner from "./images/armoury_banner.png"
+import enterarena from "./images/enterarena.png"
+import citizen_expbar from "./images/citizen_expbar.png"
+import taslogowheat from "./images/taslogowheat.png"
+import blankimage from "./images/blankimage.png"
 import Loading from "./Loading.js";
 import Connector from "./Connector.js";
-import { RadioGroup, Radio } from "@blueprintjs/core";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
-import { DropdownItemProps } from "react-bootstrap/DropdownItem";
 import Modal from "react-bootstrap/Modal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import ReactAudioPlayer from "react-audio-player";
-import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import ReactSearchBox from "react-search-box";
 import SearchBar from "./SearchBar.js";
-//import { Lucid, Blockfrost } from "lucid-cardano";
 import {
   Address,
   BaseAddress,
@@ -93,27 +78,38 @@ import {
 } from "@emurgo/cardano-serialization-lib-asmjs";
 let Buffer = require("buffer/").Buffer;
 
+//build shortenTokenLength function
+
+function shortenTokenLength(tokenName) {
+  const tokenWords = tokenName.split(" ");
+  let formattedItemName = "";
+  for (let i = 4; i < tokenWords.length; i++) {
+    formattedItemName +=
+      tokenWords[i] + (i + 1 < tokenWords.length ? " " : "");
+  }
+  return formattedItemName;
+}
+
+
+
+// Establish Loadout GearBox Structure
+
 function App() {
   const [dustbins_row1, setDustbins1] = useState([
     { accepts: [ItemTypes.HEAD], lastDroppedItem: null },
     { accepts: [ItemTypes.BODY], lastDroppedItem: null },
     { accepts: [ItemTypes.CAPE], lastDroppedItem: null },
-  ]);
-
-  const [dustbins_row2, setDustbins2] = useState([
     { accepts: [ItemTypes.GLOVES], lastDroppedItem: null },
     { accepts: [ItemTypes.LEG], lastDroppedItem: null },
-    { accepts: [ItemTypes.HORSE], lastDroppedItem: null },
   ]);
-
-  const [dustbins_row3, setDustbins3] = useState([
+  const [dustbins_row2, setDustbins2] = useState([
     { accepts: [ItemTypes.ITEM0], lastDroppedItem: null },
     { accepts: [ItemTypes.ITEM1], lastDroppedItem: null },
     { accepts: [ItemTypes.ITEM2], lastDroppedItem: null },
     { accepts: [ItemTypes.ITEM3], lastDroppedItem: null },
+    { accepts: [ItemTypes.HORSE], lastDroppedItem: null },
     { accepts: [ItemTypes.HORSEHARNESS], lastDroppedItem: null },
-  ]);
-
+  ]);  
   var truncate = function (fullStr, strLen, separator) {
     if (fullStr.length <= strLen) return fullStr;
 
@@ -153,6 +149,7 @@ function App() {
   const [lgShowLoad, setLgShowLoad] = useState(false);
   const [apeSelected, setApeSelected] = useState(false);
   const [userLoadout, setUserLoadout] = useState({
+    Ape: "",
     Head: "",
     Body: "",
     Cape: "",
@@ -164,7 +161,6 @@ function App() {
     Item3: "",
     Horse: "",
     HorseHarness: "",
-    Ape: "",
   });
   const [userLoadoutValues, setUserLoadoutValues] = useState({});
   const [searchList, setSearchList] = useState([]);
@@ -208,16 +204,6 @@ function App() {
       });
     }
   }, [isLoading, gotContent, userLoadout]);
-
-  function shortenTokenLength(tokenName) {
-    const tokenWords = tokenName.split(" ");
-    let formattedItemName = "";
-    for (let i = 4; i < tokenWords.length; i++) {
-      formattedItemName +=
-        tokenWords[i] + (i + 1 < tokenWords.length ? " " : "");
-    }
-    return formattedItemName;
-  }
 
   function onWalletContent(
     walletContent,
@@ -362,18 +348,17 @@ function App() {
       { accepts: [ItemTypes.HEAD], lastDroppedItem: null },
       { accepts: [ItemTypes.BODY], lastDroppedItem: null },
       { accepts: [ItemTypes.CAPE], lastDroppedItem: null },
-    ]);
-    setDustbins2([
       { accepts: [ItemTypes.GLOVES], lastDroppedItem: null },
       { accepts: [ItemTypes.LEG], lastDroppedItem: null },
-      { accepts: [ItemTypes.HORSE], lastDroppedItem: null },
+      
     ]);
-    setDustbins3([
+    setDustbins2([
       { accepts: [ItemTypes.ITEM0], lastDroppedItem: null },
       { accepts: [ItemTypes.ITEM1], lastDroppedItem: null },
       { accepts: [ItemTypes.ITEM2], lastDroppedItem: null },
       { accepts: [ItemTypes.ITEM3], lastDroppedItem: null },
-      { accepts: [ItemTypes.HORSEHARNESS], lastDroppedItem: null },
+      { accepts: [ItemTypes.HORSE], lastDroppedItem: null },
+      { accepts: [ItemTypes.HORSEHARNESS], lastDroppedItem: null },      
     ]);
   }
 
@@ -383,6 +368,9 @@ function App() {
   function isDropped(boxName) {
     return droppedLoadoutNames.indexOf(boxName) > -1;
   }
+
+
+  //get loadouttotals function to calculate armour totals
 
   function getLoadoutTotals() {
     let leg_armor = 0;
@@ -484,17 +472,7 @@ function App() {
       setDroppedLoadoutNames(
         update(droppedLoadoutNames, name ? { $push: [name] } : { $push: [] })
       );
-      setDustbins3(
-        update(dustbins_row3, {
-          [index]: {
-            lastDroppedItem: {
-              $set: item,
-            },
-          },
-        })
-      );
     },
-    [droppedLoadoutNames, dustbins_row3]
   );
 
   function apeUpdateInfo(event) {
@@ -547,7 +525,7 @@ function App() {
 
   const notifyError = () => {
     toast.error(
-      "Something went wrong. Plese refresh and try again. Make sure you have enough ada in your wallet to cover your assets in change address.",
+      "Something went wrong. Please refresh and try again. Make sure you have enough ada in your wallet to cover your assets in change address.",
       {
         position: "top-left",
         autoClose: 5000,
@@ -564,7 +542,7 @@ function App() {
   const notify = () => {
     toast.success("Transaction submitted. Please check your wallet.", {
       position: "top-left",
-      autoClose: 5000,
+      autoClose: 15000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -622,7 +600,7 @@ function App() {
       const shelleyChangeAddress = Address.from_bech32(walletAddress);
 
       generalMetadata.insert(
-        BigNum.from_str("674"),
+        BigNum.from_str("1888"),
         encode_json_str_to_metadatum(JSON.stringify(userLoadout))
       );
 
@@ -742,8 +720,10 @@ function App() {
           ""
         )}
 
+        {// this is the row that shows the wallet controls 
+        }
         <Row style={{ paddingTop: "10px" }}>
-          <Col>
+          <Col className="col-4" style={{ display: "flex", alignItems: "center"}}>
             {wallets ? (
               <Dropdown>
                 <Dropdown.Toggle
@@ -778,14 +758,25 @@ function App() {
                   })}
                 </Dropdown.Menu>
               </Dropdown>
+             
             ) : (
               ""
             )}
+             {isConnected ? (
+                  <div style={{textAlign: "left", marginLeft: "10px"}}>
+                  <Button
+                    variant="light"
+                    onClick={handleEditWallet}
+                    className="buttons_tas">
+                    <p>Disconnect</p>
+                  </Button>           
+                  </div>
+             ) : "" }
           </Col>
-          <Col
+          <Col className="col-4" class="align-self-center"
             style={{
               position: `${!isConnected ? "absolute" : "relative"}`,
-              width: "auto",
+              width: "auto", 
             }}
           >
             {isConnected ? (
@@ -806,16 +797,6 @@ function App() {
                   }}
                 >
                   {truncate(walletAddress, 11)}
-                </span>
-                <span>
-                  {" "}
-                  <Button
-                    variant="light"
-                    onClick={handleEditWallet}
-                    className="buttons_tas"
-                  >
-                    <p>Disconnect</p>
-                  </Button>{" "}
                 </span>
                 <span>
                   <Button
@@ -845,21 +826,64 @@ function App() {
           </Col>
           <Col>
             {" "}
-            <Button
-              disabled={!isConnected}
-              variant="success"
-              style={{
-                float: "right",
-                width: "150px",
-                height: "100px",
-                fontSize: "18px",
-              }}
-              onClick={() => {
-                setLgShow(true);
-              }}
+            {isConnected ? (
+            <div style={{textAlign: "right"}}>
+              <img src={taslogowheat}/>
+            </div>
+             ) : "" }
+            <Modal
+              size="lg"
+              show={lgShowLoad}
+              onHide={() => setLgShowLoad(false)}
+              aria-labelledby="example-modal-sizes-title-lg"
             >
-              <p style={{ color: "white" }}> Go To War </p>
-            </Button>{" "}
+              <Modal.Body bsPrefix="modal-bg">
+                <div
+                  className="modal-title"
+                  style={{ fontFamily: "Cabin, sans-serif" }}
+                >
+                  <h2 style={{ paddingBottom: "30px" }}>
+                    {" "}
+                    Your On-Chain Loadouts{" "}
+                  </h2>
+                  {postedTransactions.map((key, index) => {
+                    return (
+                      <a
+                        href={`https://cardanoscan.io/transaction/${key}?tab=metadata`}
+                        target="_blank"
+                      >
+                        <p style={{ fontSize: "16px" }}>{key}</p>
+                        <br />
+                      </a>
+                    );
+                  })}
+                </div>
+                <div className="modal-button" style={{ paddingTop: "0px" }}>
+                  <Button
+                    className="buttons_tas"
+                    style={{
+                      float: "right",
+                      width: "100px",
+                      height: "50px",
+                      fontSize: "18px",
+                      fontFamily: "Cabin, sans-serif",
+                    }}
+                    onClick={() => setLgShowLoad(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </Modal.Body>
+            </Modal>
+          </Col>
+        </Row>
+
+      {//The following row shows logos and the Ready button
+      }
+{isConnected ? (
+  <Row>
+    <Col className="col-12">
+    <img src={citizen_expbar}/>
             <Modal
               size="lg"
               show={lgShow}
@@ -910,54 +934,11 @@ function App() {
                     Confirm
                   </Button>
                 </div>
-              </Modal.Body>
-            </Modal>
-            <Modal
-              size="lg"
-              show={lgShowLoad}
-              onHide={() => setLgShowLoad(false)}
-              aria-labelledby="example-modal-sizes-title-lg"
-            >
-              <Modal.Body bsPrefix="modal-bg">
-                <div
-                  className="modal-title"
-                  style={{ fontFamily: "Cabin, sans-serif" }}
-                >
-                  <h2 style={{ paddingBottom: "30px" }}>
-                    {" "}
-                    Your On-Chain Loadouts{" "}
-                  </h2>
-                  {postedTransactions.map((key, index) => {
-                    return (
-                      <a
-                        href={`https://cardanoscan.io/transaction/${key}?tab=metadata`}
-                        target="_blank"
-                      >
-                        <p style={{ fontSize: "16px" }}>{key}</p>
-                        <br />
-                      </a>
-                    );
-                  })}
-                </div>
-                <div className="modal-button" style={{ paddingTop: "0px" }}>
-                  <Button
-                    className="buttons_tas"
-                    style={{
-                      float: "right",
-                      width: "100px",
-                      height: "50px",
-                      fontSize: "18px",
-                      fontFamily: "Cabin, sans-serif",
-                    }}
-                    onClick={() => setLgShowLoad(false)}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </Modal.Body>
-            </Modal>
-          </Col>
-        </Row>
+      </Modal.Body>
+    </Modal>
+  </Col>
+</Row>
+) : "" }
 
         {/*  <Row style={{ marginTop: "-35px", float: "right" }}>
         
@@ -965,8 +946,40 @@ function App() {
 
         {isConnected && !noLoadout ? (
           <div>
-            <div className="loadout">
+            <div className="readyButton" style={{float: "right", clear: "right"}}>
+              <Button
+                disabled={!isConnected}
+                variant="success"
+                style={{
+                  float: "right",
+                  marginTop: "20px",
+                  marginRight: "15px",
+                  width: "150px",
+                  height: "120px",
+                  fontSize: "16px",
+                  backgroundColor: "#eec07a",
+                  boxShadow: "0 0 10px #f1dab0, 0 0 20px #f1dab0, 0 0 30px #f1dab0, 0 0 40px #f1dab0, 0 0 50px #f1dab0, 0 0 60px #f1dab0",
+                  transition: "box-shadow 0.5s ease-in-out",
+                  border: "none",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 0 20px #f1dab0, 0 0 40px #f1dab0, 0 0 60px #f1dab0, 0 0 80px #f1dab0, 0 0 100px #f1dab0, 0 0 120px #f1dab0"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 0 10px #f1dab0, 0 0 20px #f1dab0, 0 0 30px #f1dab0, 0 0 40px #f1dab0, 0 0 50px #f1dab0, 0 0 60px #f1dab0"; }}
+                onClick={() => {
+                  setLgShow(true);
+                }}
+              >
+                <p style={{ color: "#FFFFFF", whiteSpace: "pre-wrap"}}>Enter Arena</p>
+
+              </Button>
+            </div>
+            {/*
+            <div style={{float: "right",  clear: "right"}}>
+              <img src={onchaingear}/> 
+            </div>  */}
+            <div style={{float: "right", clear: "right"}}>
               <SearchBar OnInputSubmit={OnInputSubmit} />
+            </div>
+            <div className="inventory" style={{float: "right", clear: "right"}}>
               {searchList.length > 0 &&
                 searchList.map(
                   (
@@ -980,6 +993,7 @@ function App() {
                       body_armor,
                       head_armor,
                       arm_armor,
+                      tier
                     },
                     index
                   ) => (
@@ -993,43 +1007,50 @@ function App() {
                           img={image}
                         />
                         <div style={{ textAlign: "center" }}>
-                          <p style={{ fontWeight: "bold" }}> [{slot}] </p>
+                         {/* <p style={{ fontWeight: "bold" }}> [{slot}] </p> 
                           <p
                             style={{
                               fontSize: "16px",
-                              width: "100px",
-                              overflow: "initial",
+                              width: "120px",
+                              wordWrap: "break-word",
+                              whiteSpace: "normal",
+                              textAlign: "center",
                               fontWeight: "500",
+                              color: changeTextColor(tier)
                             }}
                           >
                             {" "}
-                            {shortenTokenLength(name)}{" "}
+                            {tier ? tier + " " + shortenTokenLength(name) : shortenTokenLength(name)}{" "}
                           </p>
-                          <p style={{ fontSize: "12.5px" }}>
+                          
+                          <p style={{ fontSize: "12.5px", color: "ivory" }}>
                             {" "}
-                            {`Qunatity: ${amount}`}{" "}
+                            {`Quantity: ${amount}`}{" "}
                           </p>
-
-                          <p style={{ fontSize: "12.5px" }}>
+                          
+                          
+                          <p style={{ fontSize: "12.5px", color: "ivory" }}>
                             {" "}
                             {leg_armor ? `Leg armor: ${leg_armor}` : ""}{" "}
                           </p>
-                          <p style={{ fontSize: "12.5px" }}>
+                          <p style={{ fontSize: "12.5px", color: "ivory" }}>
                             {" "}
                             {body_armor ? `Body armor: ${body_armor}` : ""}{" "}
                           </p>
-                          <p style={{ fontSize: "12.5px" }}>
+                          <p style={{ fontSize: "12.5px", color: "ivory" }}>
                             {" "}
                             {head_armor ? `Head armor: ${head_armor}` : ""}{" "}
                           </p>
-                          <p style={{ fontSize: "12.5px" }}>
+                          <p style={{ fontSize: "12.5px", color: "ivory" }}>
                             {" "}
                             {arm_armor ? `Arm armor: ${arm_armor}` : ""}{" "}
                           </p>
-                          <p style={{ fontSize: "12.5px" }}>
+                          <p style={{ fontSize: "12.5px", color: "ivory" }}>
                             {" "}
                             {weight ? `Weight: ${weight}` : ""}{" "}
                           </p>
+                          */}
+                          
                         </div>
                       </Col>
                     </Row>
@@ -1043,11 +1064,12 @@ function App() {
         {isConnected ? (
           <Row>
             <Col>
-              <div class="armor-top ">
-                <p> Arm: {getLoadoutTotals()["arm"]} </p>{" "}
+              <div class="armour_totals_top">
+                <p style={{ fontWeight: "bold", textAlign: "left"}}>Armour Totals:</p>{" "}
                 <p> Head: {getLoadoutTotals()["head"]} </p>{" "}
                 <p> Body: {getLoadoutTotals()["body"]} </p>{" "}
-                <p> Leg: {getLoadoutTotals()["leg"]} </p>{" "}
+                <p> Arms: {getLoadoutTotals()["arm"]} </p>{" "}              
+                <p> Legs: {getLoadoutTotals()["leg"]} </p>{" "}
                 <p> Weight: {getLoadoutTotals()["weight"]} </p>{" "}
               </div>
             </Col>
@@ -1055,9 +1077,9 @@ function App() {
         ) : (
           ""
         )}
-
+      <div style={{ display: "flex", alignItems: "left" }}>
         {noLoadout ? (
-          <div className="loadout_no_gear">
+          <div className="inventory_no_gear">
             <Row>
               <Col>
                 <h2 style={{ textAlign: "center", marginTop: "100px" }}>
@@ -1074,9 +1096,9 @@ function App() {
         {isConnected && !noApe ? (
           <Row>
             <Col>
-              <div className="big_box">
+              <div className="big_box" style={{ position: "relative", top: 0}}>
                 <Carousel
-                  width="426px"
+                  width="480px"
                   showIndicators={false}
                   onChange={apeUpdateInfo}
                   onClickItem={apeUpdateInfo}
@@ -1099,8 +1121,8 @@ function App() {
         {noApe ? (
           <Row>
             <Col>
-              <div className="big_box_noApe">
-                <h2 style={{ marginTop: "186px" }}> No ape found </h2>
+              <div className="big_box_noApe" style={{ position: "relative", top: 0}}>
+                <h2 style={{ marginTop: "240px"}}> No ape found </h2>
               </div>
             </Col>
           </Row>
@@ -1108,110 +1130,88 @@ function App() {
           ""
         )}
         {isConnected ? (
-          <Row style={{ width: "40%", marginTop: "-383px" }}>
-            {dustbins_row1.map(({ accepts, lastDroppedItem }, index) => (
-              <Col>
-                <Dustbin
-                  accept={accepts}
-                  lastDroppedItem={lastDroppedItem}
-                  onDrop={(item) => {
-                    handleDrop1(index, item, accepts);
-                  }}
-                  key={index}
-                  img={
-                    lastDroppedItem
-                      ? transformedLoadout[lastDroppedItem["name"]]
-                      : ""
-                  }
-                />
-              </Col>
-            ))}
+          <Row style={{ width: "100px", marginTop: "10px", marginLeft: "20px" }}>
+          {dustbins_row1.map(({ accepts, lastDroppedItem }, index) => (
+            <Col style={{ width: "100px" }}>
+              <Dustbin
+                accept={accepts}
+                lastDroppedItem={lastDroppedItem}
+                onDrop={(item) => {
+                  handleDrop1(index, item, accepts);
+                }}
+                key={index}
+                img={
+                  lastDroppedItem
+                    ? transformedLoadout[lastDroppedItem["name"]]
+                    : ""
+                }
+              />
+            </Col>
+          ))}
           </Row>
-        ) : (
-          ""
-        )}
-
+        ) : ("")}
+      </div>
         {isConnected ? (
-          <Row style={{ width: "40%", marginTop: "80px" }}>
+          <Row style={{ width: "622px", marginLeft: "-5px", marginTop: "0px"}}>
             {dustbins_row2.map(({ accepts, lastDroppedItem }, index) => (
-              <Col>
-                <Dustbin
-                  accept={accepts}
-                  lastDroppedItem={lastDroppedItem}
-                  onDrop={(item) => handleDrop2(index, item, accepts)}
-                  key={index}
-                  img={
-                    lastDroppedItem
-                      ? transformedLoadout[lastDroppedItem["name"]]
-                      : ""
-                  }
-                />
-              </Col>
-            ))}
-          </Row>
+             <Col style={{ width: "100px" }}>
+               <Dustbin
+                          accept={
+                            accepts[0] === "Item0" ||
+                            accepts[0] === "Item1" ||
+                            accepts[0] === "Item2" ||
+                            accepts[0] === "Item3"
+                              ? acceptsItem
+                              : accepts
+                          }
+                          lastDroppedItem={lastDroppedItem}
+                          onDrop={(item) => {
+                            if (
+                              accepts === "Item0" ||
+                              accepts === "Item1" ||
+                              accepts === "Item2" ||
+                              accepts === "Item3"
+                            ) {
+                              accepts = "Item";
+                            }
+        
+                            handleDrop2(index, item, accepts);
+                          }}
+                          key={index}
+                          img={
+                            lastDroppedItem
+                              ? transformedLoadout[lastDroppedItem["name"]]
+                              : ""
+                          }
+                  />
+                </Col>
+              ))}
+            </Row>
+
         ) : (
           ""
         )}
-        {isConnected ? (
-          <Row style={{ width: "80%", marginTop: "100px" }}>
-            {dustbins_row3.map(({ accepts, lastDroppedItem }, index) => (
-              <Col>
-                <Dustbin
-                  accept={
-                    accepts[0] === "Item0" ||
-                    accepts[0] === "Item1" ||
-                    accepts[0] === "Item2" ||
-                    accepts[0] === "Item3"
-                      ? acceptsItem
-                      : accepts
-                  }
-                  lastDroppedItem={lastDroppedItem}
-                  onDrop={(item) => {
-                    if (
-                      accepts === "Item0" ||
-                      accepts === "Item1" ||
-                      accepts === "Item2" ||
-                      accepts === "Item3"
-                    ) {
-                      accepts = "Item";
-                    }
-
-                    handleDrop3(index, item, accepts);
-                  }}
-                  key={index}
-                  img={
-                    lastDroppedItem
-                      ? transformedLoadout[lastDroppedItem["name"]]
-                      : ""
-                  }
-                />
-                {console.log(acceptsItem[0])}
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          ""
-        )}
-
         {!isConnected && !isLoading ? (
-          <div>
-            {" "}
-            <h1
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "75vh"}}>
+            <img src={armoury_banner} alt="Armoury banner" />
+            
+           {/* <h1
               style={{
                 color: "wheat",
-                fontFamily: "Cabin, sans-serif",
+                fontFamily: "Sans-Serif",
+                textAlign: "center",
               }}
-              className="sk-grid-position"
             >
-              {" "}
-              Connect your wallet to continue{" "}
-            </h1>{" "}
+              Connect your wallet to continue
+            </h1> */
+          }
           </div>
         ) : (
           ""
         )}
       </Container>
     </div>
+    
   );
 }
 

@@ -5,10 +5,10 @@ import "./App.css";
 const style = {
   height: "12rem",
   width: "12rem",
-  marginRight: "1.5rem",
+  //marginRight: "1.5rem",
   marginBottom: "1.5rem",
   color: "white",
-  padding: "1rem",
+  //padding: "1rem",
   textAlign: "center",
   fontSize: "1rem",
   lineHeight: "normal",
@@ -17,21 +17,21 @@ const style = {
 
 const ImagePlaceHolders = {
   Head:
-    "https://cdn2.iconfinder.com/data/icons/rpg-fantasy-game-basic-ui/512/head_helmet_armor_warrior_knight_helm-512.png",
+    "images/helmet_icon.png",
   Shoulders:
-    "https://cdn.iconscout.com/icon/free/png-256/shoulder-pads-4867477-4049103.png",
+    "images/pauldrons.png",
   Torso:
-    "https://cdn2.iconfinder.com/data/icons/rpg-fantasy-game-basic-ui/512/equipment_costume_armor_body_warrior_metal_knight_protection-512.png",
+    "images/chest_armor.png",
   Arms:
-    "https://cdn2.iconfinder.com/data/icons/rpg-fantasy-game-basic-ui/512/equipment_costume_armor_glove_hand_metal_knight_warrior_protection_2-512.png",
+    "images/gauntlet.png",
   Legs:
-    "https://cdn2.iconfinder.com/data/icons/rpg-fantasy-game-basic-ui/512/equipment_costume_armor_boot_foot_metal_knight_warrior_protection_leg_2-512.png",
-  Item0: "https://static.thenounproject.com/png/3401757-200.png",
-  Item1: "https://cdn-icons-png.flaticon.com/512/3455/3455304.png",
-  Item2: "https://static.thenounproject.com/png/1121420-200.png",
-  Item3: "https://freesvg.org/img/Scroll2Blank.png",
-  Horse: "http://cdn.onlinewebfonts.com/svg/img_91457.png",
-  Saddle: "https://freesvg.org/img/warszawianka_Jumping_horse_outline_2.png",
+  "images/boots.png",
+  Item0: "images/switch_weapons.png",
+  Item1: "images/switch_weapons.png",
+  Item2: "images/switch_weapons.png",
+  Item3: "images/switch_weapons.png",
+  Horse: "images/horse.png",
+  Saddle: "images/saddle.png",
 };
 export const Dustbin = memo(function Dustbin({
   accept,
@@ -69,7 +69,7 @@ export const Dustbin = memo(function Dustbin({
   return (
     <div>
       <div
-        className={isActive ? "small_box_body_ready" : "small_box_body"}
+        className={isActive ? "loadout_box_incoming_item" : "loadout_box_empty"}
         ref={drop}
         style={{
           backgroundColor: "none",
@@ -79,12 +79,12 @@ export const Dustbin = memo(function Dustbin({
         {lastDroppedItem && (
           <img
             src={img}
-            className="loadout_img"
+            className="gear_img"
             style={{ background: "none !important" }}
           />
         )}
       </div>
-      <div
+      {/* <div
         style={{
           textAlign: "center",
           color: "wheat",
@@ -97,7 +97,7 @@ export const Dustbin = memo(function Dustbin({
           : lastDroppedItem
           ? `${shortenTokenLength(lastDroppedItem["name"])}`
           : `${accept}`}
-      </div>
-    </div>
+      </div>*/}
+        </div> 
   );
 });

@@ -525,6 +525,7 @@ export default class Connector extends React.Component {
 
                     userLoadout.push({
                         name: data.onchain_metadata.name,
+                        tier: data.onchain_metadata.tier,
                         slot: this.capitalizeFirstLetter(
                             data.onchain_metadata.slot
                         ),
